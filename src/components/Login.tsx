@@ -16,18 +16,21 @@ const LogIn = () => {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        console.log('Token:', token);
-
-        const user = result.user;
-        console.log('User', user);
-        if (user !== null) {
-          localStorage.setItem('ProfileName:', user.displayName);
-          localStorage.setItem('Photo:', user.photoURL);
+        if (credential) {
+          const token = credential.accessToken;
+          console.log('Token:', token);
+          if (token) {
+            router.push('/dashboard');
+          }
         }
 
-        if (token) {
-          router.push('/dashboard');
+        const user = result.user;
+        //save the user's Name and photoURL in localstorage for future use
+        if (user !== null) {
+          const diaplayName = user.displayName || '';
+          const displayPhoto = user.photoURL || '';
+          localStorage.setItem('ProfileName:', diaplayName);
+          localStorage.setItem('Photo:', displayPhoto);
         }
       })
       .catch((error) => {
