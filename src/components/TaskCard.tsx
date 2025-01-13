@@ -7,7 +7,7 @@ import {
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 type CardProps = {
-  children?: ReactElement;
+  children?: React.ReactNode;
   headerColor: string;
   CardTitle: string;
 };
@@ -19,7 +19,7 @@ const TaskCard = ({ headerColor, CardTitle, children }: CardProps) => {
         className="flex flex-row w-full justify-between items-center p-3 rounded-t-xl"
         style={{ backgroundColor: headerColor }}
       >
-        <p>{CardTitle}</p>
+        <p className="font-urbanist font-semibold text-base">{CardTitle}</p>
         {isOpen ? (
           <ChevronUp className="w-9 h-9" />
         ) : (
