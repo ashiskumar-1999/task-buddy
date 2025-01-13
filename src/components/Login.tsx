@@ -29,8 +29,8 @@ const LogIn = () => {
         if (user !== null) {
           const diaplayName = user.displayName || '';
           const displayPhoto = user.photoURL || '';
-          localStorage.setItem('ProfileName:', diaplayName);
-          localStorage.setItem('Photo:', displayPhoto);
+          localStorage.setItem('ProfileName', diaplayName);
+          localStorage.setItem('Photo', displayPhoto);
         }
       })
       .catch((error) => {
