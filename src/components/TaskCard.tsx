@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -7,7 +7,7 @@ import {
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 type CardProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   headerColor: string;
   CardTitle: string;
 };
