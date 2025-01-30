@@ -4,7 +4,6 @@ import type { FC } from 'react';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Checkbox } from './ui/checkbox';
-import { TableCell, TableRow } from './ui/table';
 
 export interface CardProps {
   id: any;
