@@ -1,50 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { firebaseConfig } from '../config/firebase';
-
-import { useRouter } from 'next/router';
 import { Button } from './ui/button';
 
-const LogIn = () => {
-  const provider = new GoogleAuthProvider();
-  const router = useRouter();
-
-  const handleClick = async () => {
-    const auth = getAuth(firebaseConfig);
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if (credential) {
-          const token = credential.accessToken;
-          console.log('Token:', token);
-          if (token) {
-            router.push('/dashboard');
-          }
-        }
-
-        const user = result.user;
-        //save the user's Name and photoURL in localstorage for future use
-        if (user !== null) {
-          const diaplayName = user.displayName || '';
-          const displayPhoto = user.photoURL || '';
-          localStorage.setItem('ProfileName', diaplayName);
-          localStorage.setItem('Photo', displayPhoto);
-        }
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  };
-
+const LogIn = ({ handleLogin }: { handleLogin: () => void }) => {
   return (
     <>
       <div className="flex flex-row h-screen justify-between items-center pl-20">
@@ -65,7 +23,7 @@ const LogIn = () => {
           </p>
           <Button
             className="w-[363px] h-14 rounded-2xl bg-[#292929] text-white text-[21px] font-bold font-urbanist"
-            onClick={handleClick}
+            onClick={handleLogin}
           >
             <div className="flex flex-row justify-center items-center">
               <Image
