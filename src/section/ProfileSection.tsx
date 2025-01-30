@@ -10,7 +10,7 @@ const ProfileSection = ({
   name: string | null;
 }) => {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 ">
       <div>
         {url && (
           <Image
@@ -27,7 +27,7 @@ const ProfileSection = ({
       </div>
       <Button
         variant="outline"
-        className=" rounded-xl border-[#7B198426] hover:bg-none font-urbanist text-xs font-semibold"
+        className="rounded-xl border-[#7B198426] hover:bg-none font-urbanist text-xs font-semibold"
       >
         Log Out
       </Button>
