@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { firebaseConfig } from '../config/firebase';
-import { getDatabase } from 'firebase/database';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
@@ -10,28 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
+import { FormProps } from '@/types/FormProps';
+import { push, set, ref, getDatabase } from '@firebase/database';
 
 export interface Item {
   id: number;
   text: string;
 }
 
-const dashboard = () => {
+const Dashboard = () => {
   const [tasks, setTasks] = useState<any>();
   const [url, setUrl] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const PhotoURL = localStorage.getItem('Photo');
-      setUrl(PhotoURL);
-      const ProfileName = localStorage.getItem('ProfileName');
-      setName(ProfileName);
-    }
-  }, []);
-
-  console.log('URL', url);
+  const [formDataTobeAdded, setFormDataTobeAdded] = useState<FormProps>();
+  const db = getDatabase(firebaseConfig);
 
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     setTasks((prevTasks: any[]) => {
@@ -47,6 +38,35 @@ const dashboard = () => {
       return updatedCards;
     });
   }, []);
+
+  // Now The FormValues coming from the child component CreatTask to Parent component DashBoard. Only add data function to firebase needs to be created.
+  const handleSubmit = async (formData: FormProps) => {
+    console.log(formData);
+    setFormDataTobeAdded(formData);
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const PhotoURL = localStorage.getItem('Photo');
+      setUrl(PhotoURL);
+      const ProfileName = localStorage.getItem('ProfileName');
+      setName(ProfileName);
+    }
+  }, []);
+
+  const SaveDataToFireBase = async () => {
+    if (!formDataTobeAdded) return;
+    console.log('Data added to Firebase', formDataTobeAdded);
+    const path = push(ref(db, 'Tasks/'), null);
+    await set(path, {
+      title: formDataTobeAdded?.title,
+      description: formDataTobeAdded?.description,
+      due: formDataTobeAdded?.dueDate,
+      status: formDataTobeAdded?.status,
+      fileURL: formDataTobeAdded?.uploadFile,
+    });
+  };
+  SaveDataToFireBase();
 
   return (
     <Tabs defaultValue="list">
@@ -83,6 +103,7 @@ const dashboard = () => {
               Add Task
             </Button>
             <Createtask
+              onSubmit={handleSubmit}
               isDialogOpen={isOpen}
               onDialogClose={() => setIsOpen(false)}
             />
@@ -126,4 +147,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
