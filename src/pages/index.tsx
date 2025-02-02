@@ -1,11 +1,8 @@
-import Image from 'next/image';
-import { Geist, Geist_Mono } from 'next/font/google';
+import React from 'react'
 import LogIn from '@/components/Login';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { firebaseConfig } from '../config/firebase';
 import { useRouter } from 'next/router';
-import Createtask from '@/section/Createtask';
-
 export default function Home() {
   const provider = new GoogleAuthProvider();
   const router = useRouter();

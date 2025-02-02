@@ -7,9 +7,12 @@ import { Checkbox } from './ui/checkbox';
 
 export interface CardProps {
   id: any;
-  text: string;
-  index: number;
-  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  title: string;
+  dueDate: string;
+  status: string;
+  index?: number;
+
+  moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
 interface DragItem {
@@ -22,10 +25,17 @@ const ItemTypes = {
   CARD: 'card',
 };
 
-const Task: FC<CardProps> = ({ id, text, index, moveCard }) => {
+const Task: FC<CardProps> = ({
+  id,
+  title,
+  dueDate,
+  status,
+  index,
+  moveCard,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [checked, setChecked] = useState(false);
-  const [{ handlerId }, drop] = useDrop<
+  /* const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
     { handlerId: Identifier | null }
@@ -89,24 +99,18 @@ const Task: FC<CardProps> = ({ id, text, index, moveCard }) => {
     }),
   });
 
-  drag(drop(ref));
+  drag(drop(ref)); */
   return (
-    <div
-      ref={ref}
-      data-handler-id={handlerId}
-      className="flex flex-row items-center p-4 gap-4"
-    >
+    <div className="flex flex-row items-center p-4 gap-4">
       <Checkbox
         id={id}
         checked={checked}
         onCheckedChange={() => setChecked(checked ? false : true)}
       />
       <div className="flex flex-row w-full justify-between items-center">
-        <p className="min-w-80 font-urbanist text-sm font-medium ">{text}</p>
-        <p className="min-w-24 font-urbanist text-sm font-medium">Due On</p>
-        <p className="min-w-24 font-urbanist text-sm font-medium">
-          Task Status
-        </p>
+        <p className="min-w-80 font-urbanist text-sm font-medium ">{title}</p>
+        <p className="min-w-24 font-urbanist text-sm font-medium">{dueDate}</p>
+        <p className="min-w-24 font-urbanist text-sm font-medium">{status}</p>
         <p className="font-urbanist text-sm font-medium">Task Category</p>
       </div>
     </div>

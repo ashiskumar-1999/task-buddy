@@ -9,7 +9,7 @@ import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
 import { FormProps } from '@/types/FormProps';
-import { push, set, ref, getDatabase } from '@firebase/database';
+import { push, set, get, ref, getDatabase } from '@firebase/database';
 
 export interface Item {
   id: number;
@@ -23,8 +23,10 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formDataTobeAdded, setFormDataTobeAdded] = useState<FormProps>();
   const db = getDatabase(firebaseConfig);
+  const pathRef = ref(db, 'Tasks/');
 
-  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+  // This functionality need some refactoring to behave properly.
+  /* const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     setTasks((prevTasks: any[]) => {
       // Create a copy of the previous array to avoid mutating the state directly
       const updatedCards = [...prevTasks];
@@ -37,7 +39,7 @@ const Dashboard = () => {
 
       return updatedCards;
     });
-  }, []);
+  }, []); */
 
   // Now The FormValues coming from the child component CreatTask to Parent component DashBoard. Only add data function to firebase needs to be created.
   const handleSubmit = async (formData: FormProps) => {
@@ -53,20 +55,42 @@ const Dashboard = () => {
       setName(ProfileName);
     }
   }, []);
-
-  const SaveDataToFireBase = async () => {
+  useEffect(() => {
     if (!formDataTobeAdded) return;
-    console.log('Data added to Firebase', formDataTobeAdded);
-    const path = push(ref(db, 'Tasks/'), null);
-    await set(path, {
-      title: formDataTobeAdded?.title,
-      description: formDataTobeAdded?.description,
-      due: formDataTobeAdded?.dueDate,
-      status: formDataTobeAdded?.status,
-      fileURL: formDataTobeAdded?.uploadFile,
-    });
-  };
-  SaveDataToFireBase();
+    else {
+      const SaveDataToFireBase = async () => {
+        try {
+          await set(push(pathRef), {
+            title: formDataTobeAdded?.title,
+            description: formDataTobeAdded?.description,
+            due: formDataTobeAdded?.dueDate,
+            status: formDataTobeAdded?.status,
+            fileURL: formDataTobeAdded?.uploadFile,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      SaveDataToFireBase();
+    }
+  }, [formDataTobeAdded]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        await get(pathRef).then((snapshot) => {
+          if (snapshot.exists() && snapshot.val) {
+            const Tasks = Object.values(snapshot.val());
+            setTasks(Tasks);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchTasks();
+  }, []);
+  console.log('Data', tasks);
 
   return (
     <Tabs defaultValue="list">
@@ -112,13 +136,17 @@ const Dashboard = () => {
 
         <div className="flex flex-col justify-center">
           <TaskCard headerColor="#FAC3FF" CardTitle="Todo">
-            <Task
-              id={1}
-              text={'Change the color of the button'}
-              index={0}
-              moveCard={moveCard}
-            />
-            <Task
+            {tasks?.map((data: any) => (
+              <Task
+                key={data.id}
+                id={data.id}
+                title={data.title}
+                dueDate={data.dueDate}
+                status={data.status}
+              />
+            ))}
+
+            {/*   <Task
               id={2}
               text={'Change the color of the Text'}
               index={0}
@@ -135,7 +163,7 @@ const Dashboard = () => {
               text={'Change the color of the button'}
               index={0}
               moveCard={moveCard}
-            />
+            /> */}
           </TaskCard>
 
           <TaskCard headerColor="#85D9F1" CardTitle="In-progress" />
