@@ -4,6 +4,13 @@ import type { FC } from 'react';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Checkbox } from './ui/checkbox';
+import { Ellipsis } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuContent,
+} from './ui/dropdown-menu';
 
 export interface CardProps {
   id: any;
@@ -11,7 +18,7 @@ export interface CardProps {
   dueDate: string;
   status: string;
   index?: number;
-
+  handleDelete?: (TaskId: any) => void;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -32,6 +39,7 @@ const Task: FC<CardProps> = ({
   status,
   index,
   moveCard,
+  handleDelete,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [checked, setChecked] = useState(false);
@@ -101,7 +109,7 @@ const Task: FC<CardProps> = ({
 
   drag(drop(ref)); */
   return (
-    <div className="flex flex-row items-center p-4 gap-4">
+    <div className="flex items-center p-4 gap-4">
       <Checkbox
         id={id}
         checked={checked}
@@ -113,6 +121,19 @@ const Task: FC<CardProps> = ({
         <p className="min-w-24 font-urbanist text-sm font-medium">{status}</p>
         <p className="font-urbanist text-sm font-medium">Task Category</p>
       </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Ellipsis />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {/* <DropdownMenuItem onClick={() => startEditing(file.id, file.name)}>
+            Edit
+          </DropdownMenuItem> */}
+          <DropdownMenuItem onClick={() => handleDelete && handleDelete(id)}>
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

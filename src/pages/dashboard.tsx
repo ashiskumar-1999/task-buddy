@@ -101,6 +101,22 @@ const Dashboard = () => {
     fetchTasks();
   }, [tasks]);
 
+  const handleTaskRemove = useCallback((TaskId: any) => {
+    const newPathRef = ref(db, 'Tasks/' + TaskId);
+    console.log('NewRef', newPathRef);
+    remove(newPathRef)
+      .then(() => {
+        console.log('Task removed successfully');
+        // Update the tasks state to reflect the removal
+        setTasks((prevTasks: []) =>
+          prevTasks.filter((task: any) => task.id !== TaskId)
+        );
+      })
+      .catch((error) => {
+        console.error('Error removing task: ', error);
+      });
+  }, []);
+
   const filterTasksByStatus = (statusKey: string) => {
     return tasks && tasks.filter((task: any) => task.status === statusKey);
   };
@@ -162,6 +178,7 @@ const Dashboard = () => {
                     title={task.title}
                     dueDate={task.dueDate}
                     status={replaceCapitalLetter(task.status)}
+                    handleDelete={handleTaskRemove}
                   />
                 ))}
               </TaskCard>
