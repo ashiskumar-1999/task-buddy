@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { firebaseConfig } from '../config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
@@ -9,7 +9,7 @@ import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
 import { FormProps } from '@/types/FormProps';
-import { push, set, get, ref, getDatabase } from '@firebase/database';
+import { push, set, get, ref, remove, getDatabase } from '@firebase/database';
 
 export interface Item {
   id: number;
@@ -17,13 +17,18 @@ export interface Item {
 }
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState<any>();
+  const [tasks, setTasks] = useState<any>([]);
   const [url, setUrl] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formDataTobeAdded, setFormDataTobeAdded] = useState<FormProps>();
   const db = getDatabase(firebaseConfig);
   const pathRef = ref(db, 'Tasks/');
+  const statusCategories = [
+    { title: 'To-Do', color: '#FAC3FF', key: 'to-do' },
+    { title: 'In-Progress', color: '#85D9F1', key: 'in-progress' },
+    { title: 'Completed', color: '#C3FFAC', key: 'completed' },
+  ];
 
   // This functionality need some refactoring to behave properly.
   /* const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
@@ -63,7 +68,7 @@ const Dashboard = () => {
           await set(push(pathRef), {
             title: formDataTobeAdded?.title,
             description: formDataTobeAdded?.description,
-            due: formDataTobeAdded?.dueDate,
+            dueDate: formDataTobeAdded?.dueDate,
             status: formDataTobeAdded?.status,
             fileURL: formDataTobeAdded?.uploadFile,
           });
@@ -79,8 +84,13 @@ const Dashboard = () => {
     const fetchTasks = async () => {
       try {
         await get(pathRef).then((snapshot) => {
-          if (snapshot.exists() && snapshot.val) {
-            const Tasks = Object.values(snapshot.val());
+          if (snapshot.exists() && snapshot.val()) {
+            const Tasks = Object.entries(snapshot.val()).map(
+              ([key, value]: [string, any]) => ({
+                id: key,
+                ...value,
+              })
+            );
             setTasks(Tasks);
           }
         });
@@ -89,8 +99,14 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, []);
-  console.log('Data', tasks);
+  }, [tasks]);
+
+  const filterTasksByStatus = (statusKey: string) => {
+    return tasks && tasks.filter((task: any) => task.status === statusKey);
+  };
+  const replaceCapitalLetter = (string: string) => {
+    return string.replace(/\b\w|-(\w)/g, (str) => str.toUpperCase());
+  };
 
   return (
     <Tabs defaultValue="list">
@@ -117,7 +133,7 @@ const Dashboard = () => {
           </div>
           <div className="flex flex-row items-center gap-4">
             <Input
-              placeholder="🔎 Search"
+              placeholder="Search"
               className="p-1.5 font-urbanist text-xs font-semibold rounded-full"
             />
             <Button
@@ -135,40 +151,22 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-col justify-center">
-          <TaskCard headerColor="#FAC3FF" CardTitle="Todo">
-            {tasks?.map((data: any) => (
-              <Task
-                key={data.id}
-                id={data.id}
-                title={data.title}
-                dueDate={data.dueDate}
-                status={data.status}
-              />
-            ))}
-
-            {/*   <Task
-              id={2}
-              text={'Change the color of the Text'}
-              index={0}
-              moveCard={moveCard}
-            />
-            <Task
-              id={3}
-              text={'Change the color of the button'}
-              index={0}
-              moveCard={moveCard}
-            />
-            <Task
-              id={4}
-              text={'Change the color of the button'}
-              index={0}
-              moveCard={moveCard}
-            /> */}
-          </TaskCard>
-
-          <TaskCard headerColor="#85D9F1" CardTitle="In-progress" />
-
-          <TaskCard headerColor="#CEFFCC" CardTitle="Completed" />
+          {statusCategories.map(({ title, color, key }) => {
+            const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
+            return (
+              <TaskCard key={key} headerColor={color} CardTitle={title}>
+                {filteredTasks.map((task: any) => (
+                  <Task
+                    key={task.id}
+                    id={task.id}
+                    title={task.title}
+                    dueDate={task.dueDate}
+                    status={replaceCapitalLetter(task.status)}
+                  />
+                ))}
+              </TaskCard>
+            );
+          })}
         </div>
       </div>
     </Tabs>

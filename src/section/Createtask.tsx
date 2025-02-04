@@ -131,9 +131,9 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
                 required
               >
                 <option value="">Choose</option>
-                <option value="To-DO">To-Do</option>
-                <option value="In-Progress">In Progress</option>
-                <option value="Completed">Completed</option>
+                <option value="to-do">To-Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
               </select>
             </div>
           </div>
