@@ -29,11 +29,27 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
     uploadFile: null,
   });
 
-  const handleChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value || e.target.files[0],
-    });
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { id, value } = e.target;
+
+    if (id === 'uploadFile' && e.target instanceof HTMLInputElement) {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        setFormData((prevData) => ({
+          ...prevData,
+          [id]: files[0],
+        }));
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    }
   };
 
   const onInputSubmit = (e: FormEvent) => {

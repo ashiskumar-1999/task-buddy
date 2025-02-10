@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { firebaseConfig } from '../config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
@@ -8,8 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
-import { FormProps } from '@/types/FormProps';
 import { push, set, get, ref, remove, getDatabase } from '@firebase/database';
+import { FormProps, TaskProps } from '@/types';
 
 export interface Item {
   id: number;
@@ -17,7 +17,7 @@ export interface Item {
 }
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState<any>([]);
+  const [tasks, setTasks] = useState<TaskProps[]>([]);
   const [url, setUrl] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -78,19 +78,19 @@ const Dashboard = () => {
       };
       SaveDataToFireBase();
     }
-  }, [formDataTobeAdded]);
+  }, [pathRef]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         await get(pathRef).then((snapshot) => {
           if (snapshot.exists() && snapshot.val()) {
-            const Tasks = Object.entries(snapshot.val()).map(
-              ([key, value]: [string, any]) => ({
-                id: key,
-                ...value,
-              })
-            );
+            const Tasks = Object.entries(
+              snapshot.val() as Record<string, TaskProps>
+            ).map(([key, value]) => ({
+              ...value,
+              id: key,
+            }));
             setTasks(Tasks);
           }
         });
@@ -99,26 +99,28 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, [tasks]);
-
-  const handleTaskRemove = useCallback((TaskId: any) => {
+  }, []);
+  console.log('Data', tasks);
+  const handleTaskRemove = async (TaskId: string) => {
     const newPathRef = ref(db, 'Tasks/' + TaskId);
     console.log('NewRef', newPathRef);
-    remove(newPathRef)
+    await remove(newPathRef)
       .then(() => {
         console.log('Task removed successfully');
         // Update the tasks state to reflect the removal
-        setTasks((prevTasks: []) =>
-          prevTasks.filter((task: any) => task.id !== TaskId)
+        setTasks((prevTasks: TaskProps[]) =>
+          prevTasks.filter((task: TaskProps) => task.id !== TaskId)
         );
       })
       .catch((error) => {
         console.error('Error removing task: ', error);
       });
-  }, []);
+  };
 
   const filterTasksByStatus = (statusKey: string) => {
-    return tasks && tasks.filter((task: any) => task.status === statusKey);
+    return (
+      tasks && tasks.filter((task: TaskProps) => task.status === statusKey)
+    );
   };
   const replaceCapitalLetter = (string: string) => {
     return string.replace(/\b\w|-(\w)/g, (str) => str.toUpperCase());
@@ -171,7 +173,7 @@ const Dashboard = () => {
             const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
             return (
               <TaskCard key={key} headerColor={color} CardTitle={title}>
-                {filteredTasks.map((task: any) => (
+                {filteredTasks.map((task: TaskProps) => (
                   <Task
                     key={task.id}
                     id={task.id}

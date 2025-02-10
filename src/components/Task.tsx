@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import type { Identifier, XYCoord } from 'dnd-core';
 import type { FC } from 'react';
-import { useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
 import { Checkbox } from './ui/checkbox';
 import { Ellipsis } from 'lucide-react';
 import {
@@ -13,16 +10,16 @@ import {
 } from './ui/dropdown-menu';
 
 export interface CardProps {
-  id: any;
+  id: string;
   title: string;
   dueDate: string;
   status: string;
   index?: number;
-  handleDelete?: (TaskId: any) => void;
+  handleDelete?: (TaskId: string) => void;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
-interface DragItem {
+/* interface DragItem {
   index: number;
   id: string;
   type: string;
@@ -31,18 +28,10 @@ interface DragItem {
 const ItemTypes = {
   CARD: 'card',
 };
-
-const Task: FC<CardProps> = ({
-  id,
-  title,
-  dueDate,
-  status,
-  index,
-  moveCard,
-  handleDelete,
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
+ */
+const Task: FC<CardProps> = ({ id, title, dueDate, status, handleDelete }) => {
   const [checked, setChecked] = useState(false);
+  /* const ref = useRef<HTMLDivElement>(null); */
   /* const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
