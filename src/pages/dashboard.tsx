@@ -10,6 +10,8 @@ import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
 import { push, set, get, ref, remove, getDatabase } from '@firebase/database';
 import { FormProps, TaskProps } from '@/types';
+import { getAuth, signOut } from 'firebase/auth';
+import { useRouter } from 'next/router';
 
 export interface Item {
   id: number;
@@ -22,8 +24,11 @@ const Dashboard = () => {
   const [name, setName] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formDataTobeAdded, setFormDataTobeAdded] = useState<FormProps>();
+  const router = useRouter();
   const db = getDatabase(firebaseConfig);
+  const auth = getAuth(firebaseConfig);
   const pathRef = ref(db, 'Tasks/');
+
   const statusCategories = [
     { title: 'To-Do', color: '#FAC3FF', key: 'to-do' },
     { title: 'In-Progress', color: '#85D9F1', key: 'in-progress' },
@@ -46,7 +51,15 @@ const Dashboard = () => {
     });
   }, []); */
 
-  // Now The FormValues coming from the child component CreatTask to Parent component DashBoard. Only add data function to firebase needs to be created.
+  const handleSignOut = async () => {
+    await signOut(auth)
+      .then(() => {
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      })
+      .catch((err) => console.error(err));
+  };
   const handleSubmit = async (formData: FormProps) => {
     console.log(formData);
     setFormDataTobeAdded(formData);
@@ -78,7 +91,7 @@ const Dashboard = () => {
       };
       SaveDataToFireBase();
     }
-  }, [pathRef]);
+  }, [formDataTobeAdded, pathRef]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -99,9 +112,9 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, []);
-  console.log('Data', tasks);
-  const handleTaskRemove = async (TaskId: string) => {
+  }, [tasks]);
+
+  const handleTaskRemove = async (TaskId: string | []) => {
     const newPathRef = ref(db, 'Tasks/' + TaskId);
     console.log('NewRef', newPathRef);
     await remove(newPathRef)
@@ -131,7 +144,7 @@ const Dashboard = () => {
       <div className="px-9 py-14">
         <div className="flex flex-row justify-between items-start -mb-8">
           <Logo />
-          <ProfileSection url={url} name={name} />
+          <ProfileSection url={url} name={name} handleSignOut={handleSignOut} />
         </div>
         <TabsList className="pl-0 space-x-2 border-none bg-transparent">
           <TabsTrigger

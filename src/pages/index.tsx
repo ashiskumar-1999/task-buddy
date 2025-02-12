@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import LogIn from '@/components/Login';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { firebaseConfig } from '../config/firebase';
@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 export default function Home() {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
+  const auth = getAuth(firebaseConfig);
 
   const handleLogin = async () => {
-    const auth = getAuth(firebaseConfig);
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.

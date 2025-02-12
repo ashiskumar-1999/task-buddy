@@ -31,6 +31,14 @@ const ItemTypes = {
  */
 const Task: FC<CardProps> = ({ id, title, dueDate, status, handleDelete }) => {
   const [checked, setChecked] = useState(false);
+
+  const handleCheck = () => {
+    if (checked) {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    }
+  };
   /* const ref = useRef<HTMLDivElement>(null); */
   /* const [{ handlerId }, drop] = useDrop<
     DragItem,
@@ -99,11 +107,7 @@ const Task: FC<CardProps> = ({ id, title, dueDate, status, handleDelete }) => {
   drag(drop(ref)); */
   return (
     <div className="flex items-center p-4 gap-4">
-      <Checkbox
-        id={id}
-        checked={checked}
-        onCheckedChange={() => setChecked(checked ? false : true)}
-      />
+      <Checkbox id={id} checked={checked} onCheckedChange={handleCheck} />
       <div className="flex flex-row w-full justify-between items-center">
         <p className="min-w-80 font-urbanist text-sm font-medium ">{title}</p>
         <p className="min-w-24 font-urbanist text-sm font-medium">{dueDate}</p>

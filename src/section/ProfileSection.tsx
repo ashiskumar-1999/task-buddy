@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 const ProfileSection = ({
   url,
   name,
+  handleSignOut,
 }: {
   url: string | null;
   name: string | null;
+  handleSignOut: () => void;
 }) => {
   return (
     <div className="space-y-2 ">
@@ -28,6 +30,7 @@ const ProfileSection = ({
       <Button
         variant="outline"
         className="rounded-xl border-[#7B198426] hover:bg-none font-urbanist text-xs font-semibold"
+        onClick={handleSignOut}
       >
         Log Out
       </Button>
