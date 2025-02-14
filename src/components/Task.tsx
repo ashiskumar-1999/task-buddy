@@ -15,6 +15,7 @@ export interface CardProps {
   dueDate: string;
   status: string;
   index?: number;
+  isListView?: boolean;
   handleDelete?: (TaskId: string) => void;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
@@ -29,7 +30,14 @@ const ItemTypes = {
   CARD: 'card',
 };
  */
-const Task: FC<CardProps> = ({ id, title, dueDate, status, handleDelete }) => {
+const Task: FC<CardProps> = ({
+  id,
+  title,
+  dueDate,
+  isListView,
+  status,
+  handleDelete,
+}) => {
   const [checked, setChecked] = useState(false);
 
   const handleCheck = () => {
@@ -109,10 +117,18 @@ const Task: FC<CardProps> = ({ id, title, dueDate, status, handleDelete }) => {
     <div className="flex items-center p-4 gap-4">
       <Checkbox id={id} checked={checked} onCheckedChange={handleCheck} />
       <div className="flex flex-row w-full justify-between items-center">
-        <p className="min-w-80 font-urbanist text-sm font-medium ">{title}</p>
-        <p className="min-w-24 font-urbanist text-sm font-medium">{dueDate}</p>
-        <p className="min-w-24 font-urbanist text-sm font-medium">{status}</p>
-        <p className="font-urbanist text-sm font-medium">Task Category</p>
+        <p className="min-w-20 font-urbanist text-sm font-medium ">{title}</p>
+        {isListView && (
+          <>
+            <p className="min-w-24 font-urbanist text-sm font-medium">
+              {dueDate}
+            </p>
+            <p className="min-w-24 font-urbanist text-sm font-medium">
+              {status}
+            </p>
+            <p className="font-urbanist text-sm font-medium">Task Category</p>
+          </>
+        )}
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

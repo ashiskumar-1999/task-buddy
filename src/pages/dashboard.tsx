@@ -143,7 +143,7 @@ const Dashboard = () => {
 
   return (
     <Tabs defaultValue="list">
-      <div className="px-9 py-14">
+      <div className="px-9 py-8">
         <div className="flex flex-row justify-between items-start -mb-8">
           <Logo />
           <ProfileSection url={url} name={name} handleSignOut={handleSignOut} />
@@ -205,6 +205,7 @@ const Dashboard = () => {
                     <Task
                       key={task.id}
                       id={task.id}
+                      isListView
                       title={task.title}
                       dueDate={task.dueDate}
                       status={replaceCapitalLetter(task.status)}

@@ -16,7 +16,7 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return isBoard === true ? (
-    <div className="w-[25rem] min-h-full rounded-xl bg-gray-200 p-4 mt-8">
+    <div className="w-[25rem] h-[30rem] rounded-xl bg-gray-200 p-4 mt-8">
       <span
         className="min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
         style={{ backgroundColor: headerColor }}
