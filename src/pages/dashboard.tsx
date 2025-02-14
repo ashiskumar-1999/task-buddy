@@ -12,6 +12,8 @@ import { push, set, get, ref, remove, getDatabase } from '@firebase/database';
 import { FormProps, TaskProps } from '@/types';
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
+import { SquareKanban, Rows3 } from 'lucide-react';
+import { TabsContent } from '@radix-ui/react-tabs';
 
 export interface Item {
   id: number;
@@ -91,7 +93,7 @@ const Dashboard = () => {
       };
       SaveDataToFireBase();
     }
-  }, [formDataTobeAdded, pathRef]);
+  }, [pathRef]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -148,14 +150,22 @@ const Dashboard = () => {
         </div>
         <TabsList className="pl-0 space-x-2 border-none bg-transparent">
           <TabsTrigger
-            value="list" /* 
-            className="border-b border-transparent px-0 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-           */
+            value="list"
+            className="text-xl  font-medium border border-transparent rounded-none data-[state=active]:border-b data-[state=active]:border-solid data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
-            <span className="text-xl font-medium">List</span>
+            <span className="inline-block p-1">
+              <Rows3 />
+            </span>
+            List
           </TabsTrigger>
-          <TabsTrigger value="board">
-            <span className="text-xl font-medium">Board</span>
+          <TabsTrigger
+            value="board"
+            className="text-xl  font-medium border border-transparent rounded-none data-[state=active]:text-black data-[state=active]:border-b data-[state=active]:border-solid data-[state=active]:border-b-black data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          >
+            <span className="inline-block p-1">
+              <SquareKanban />
+            </span>
+            Board
           </TabsTrigger>
         </TabsList>
         <div className="flex flex-row items-center justify-between pt-4">
@@ -180,26 +190,58 @@ const Dashboard = () => {
             />
           </div>
         </div>
-
-        <div className="flex flex-col justify-center">
-          {statusCategories.map(({ title, color, key }) => {
-            const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
-            return (
-              <TaskCard key={key} headerColor={color} CardTitle={title}>
-                {filteredTasks.map((task: TaskProps) => (
-                  <Task
-                    key={task.id}
-                    id={task.id}
-                    title={task.title}
-                    dueDate={task.dueDate}
-                    status={replaceCapitalLetter(task.status)}
-                    handleDelete={handleTaskRemove}
-                  />
-                ))}
-              </TaskCard>
-            );
-          })}
-        </div>
+        <TabsContent value="list">
+          <div className="flex flex-col justify-center">
+            {statusCategories.map(({ title, color, key }) => {
+              const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
+              return (
+                <TaskCard
+                  key={key}
+                  headerColor={color}
+                  CardTitle={title}
+                  isBoard={false}
+                >
+                  {filteredTasks.map((task: TaskProps) => (
+                    <Task
+                      key={task.id}
+                      id={task.id}
+                      title={task.title}
+                      dueDate={task.dueDate}
+                      status={replaceCapitalLetter(task.status)}
+                      handleDelete={handleTaskRemove}
+                    />
+                  ))}
+                </TaskCard>
+              );
+            })}
+          </div>
+        </TabsContent>
+        <TabsContent value="board">
+          <div className="flex flex-row justify-between">
+            {statusCategories.map(({ title, color, key }) => {
+              const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
+              return (
+                <TaskCard
+                  key={key}
+                  headerColor={color}
+                  CardTitle={title}
+                  isBoard={true}
+                >
+                  {filteredTasks.map((task: TaskProps) => (
+                    <Task
+                      key={task.id}
+                      id={task.id}
+                      title={task.title}
+                      dueDate={task.dueDate}
+                      status={replaceCapitalLetter(task.status)}
+                      handleDelete={handleTaskRemove}
+                    />
+                  ))}
+                </TaskCard>
+              );
+            })}
+          </div>
+        </TabsContent>
       </div>
     </Tabs>
   );

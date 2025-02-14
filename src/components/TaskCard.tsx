@@ -10,10 +10,22 @@ type CardProps = {
   children?: ReactNode;
   headerColor: string;
   CardTitle: string;
+  isBoard: boolean;
 };
-const TaskCard = ({ headerColor, CardTitle, children }: CardProps) => {
+const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  return (
+
+  return isBoard === true ? (
+    <div className="w-[25rem] min-h-full rounded-xl bg-gray-200 p-4 mt-8">
+      <span
+        className="min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
+        style={{ backgroundColor: headerColor }}
+      >
+        {CardTitle}
+      </span>
+      {children}
+    </div>
+  ) : (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full mt-8">
       <CollapsibleTrigger
         className="flex flex-row w-full justify-between items-center p-3 rounded-t-xl"
