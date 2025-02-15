@@ -19,7 +19,7 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
   return isBoard === true ? (
     <ScrollArea className="w-[25rem] h-[30rem] rounded-xl bg-gray-200 p-4 mt-8">
       <span
-        className="min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
+        className="sticky min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
         style={{ backgroundColor: headerColor }}
       >
         {CardTitle}

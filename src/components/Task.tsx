@@ -117,15 +117,13 @@ const Task: FC<CardProps> = ({
     <div className="flex items-center p-4 gap-4">
       <Checkbox id={id} checked={checked} onCheckedChange={handleCheck} />
       <div className="flex flex-row w-full justify-between items-center">
-        <p className="min-w-20 font-urbanist text-sm font-medium ">{title}</p>
+        <p className="w-40 font-urbanist text-sm font-medium ">{title}</p>
         {isListView && (
           <>
-            <p className="min-w-24 font-urbanist text-sm font-medium">
+            <p className="w-24  text-center font-urbanist text-sm font-medium">
               {dueDate}
             </p>
-            <p className="min-w-24 font-urbanist text-sm font-medium">
-              {status}
-            </p>
+            <p className="w-24 font-urbanist text-sm font-medium">{status}</p>
             <p className="font-urbanist text-sm font-medium">Task Category</p>
           </>
         )}

@@ -114,7 +114,7 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, []);
+  }, [formDataTobeAdded]);
 
   const handleTaskRemove = async (TaskId: string | []) => {
     const newPathRef = ref(db, 'Tasks/' + TaskId);
