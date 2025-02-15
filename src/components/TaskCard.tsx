@@ -5,6 +5,7 @@ import {
   CollapsibleContent,
 } from './ui/collapsible';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ScrollArea } from './ui/scroll-area';
 
 type CardProps = {
   children?: ReactNode;
@@ -16,7 +17,7 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return isBoard === true ? (
-    <div className="w-[25rem] h-[30rem] rounded-xl bg-gray-200 p-4 mt-8">
+    <ScrollArea className="w-[25rem] h-[30rem] rounded-xl bg-gray-200 p-4 mt-8">
       <span
         className="min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
         style={{ backgroundColor: headerColor }}
@@ -24,7 +25,7 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
         {CardTitle}
       </span>
       {children}
-    </div>
+    </ScrollArea>
   ) : (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full mt-8">
       <CollapsibleTrigger
@@ -39,9 +40,9 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
         )}
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <div className="flex flex-col w-full min-h-[20.6rem] rounded-b-xl bg-gray-200">
+        <ScrollArea className="flex flex-col w-full h-[20.6rem] rounded-b-xl bg-gray-200">
           {children}
-        </div>
+        </ScrollArea>
       </CollapsibleContent>
     </Collapsible>
   );
