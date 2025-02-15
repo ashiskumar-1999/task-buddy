@@ -93,7 +93,7 @@ const Dashboard = () => {
       };
       SaveDataToFireBase();
     }
-  }, [pathRef]);
+  }, [formDataTobeAdded]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -114,7 +114,7 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, [tasks]);
+  }, []);
 
   const handleTaskRemove = async (TaskId: string | []) => {
     const newPathRef = ref(db, 'Tasks/' + TaskId);
