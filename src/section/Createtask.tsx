@@ -108,10 +108,20 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
               Task Category
             </Label>
             <div className="flex items-center space-x-4 mt-1">
-              <Button className="px-4 py-2 bg-purple-100 text-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <Button
+                id="category"
+                value="work"
+                className="px-4 py-2 bg-purple-100 text-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onClick={() => handleChange}
+              >
                 Work
               </Button>
-              <Button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
+              <Button
+                id="category"
+                value="personal"
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
+                onClick={() => handleChange}
+              >
                 Personal
               </Button>
             </div>

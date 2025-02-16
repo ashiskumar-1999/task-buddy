@@ -17,15 +17,15 @@ const TaskCard = ({ CardTitle, headerColor, isBoard, children }: CardProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return isBoard === true ? (
-    <ScrollArea className="w-[25rem] h-[30rem] rounded-xl bg-gray-200 p-4 mt-8">
+    <div className="w-full lg:w-80 h-[30rem] rounded-xl bg-gray-200 p-4 mt-8 mb-4 lg:mb-0 lg:mr-4 last:mr-0">
       <span
-        className="sticky min-w-16 p-2 rounded-sm  font-urbanist font-semibold text-base"
+        className="sticky min-w-16 p-2 rounded-sm font-urbanist font-semibold text-base"
         style={{ backgroundColor: headerColor }}
       >
         {CardTitle}
       </span>
-      {children}
-    </ScrollArea>
+      <ScrollArea>{children}</ScrollArea>
+    </div>
   ) : (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full mt-8">
       <CollapsibleTrigger

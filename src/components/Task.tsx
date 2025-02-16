@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuContent,
 } from './ui/dropdown-menu';
+import { Button } from './ui/button';
 
 export interface CardProps {
   id: string;
@@ -17,6 +18,7 @@ export interface CardProps {
   index?: number;
   isListView?: boolean;
   handleDelete?: (TaskId: string) => void;
+  handleStatus?: (value: string) => void;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -37,6 +39,7 @@ const Task: FC<CardProps> = ({
   isListView,
   status,
   handleDelete,
+  handleStatus,
 }) => {
   const [checked, setChecked] = useState(false);
 
@@ -120,11 +123,21 @@ const Task: FC<CardProps> = ({
         <p className="w-40 font-urbanist text-sm font-medium ">{title}</p>
         {isListView && (
           <>
-            <p className="w-24  text-center font-urbanist text-sm font-medium">
+            <p className="w-24  hidden md:block text-center font-urbanist text-sm font-medium">
               {dueDate}
             </p>
-            <p className="w-24 font-urbanist text-sm font-medium">{status}</p>
-            <p className="font-urbanist text-sm font-medium">Task Category</p>
+            <select
+              onChange={(e) => handleStatus && handleStatus(e.target.value)}
+              className="w-24 hidden md:block font-urbanist text-sm font-medium bg-transparent"
+            >
+              <option value="">{status}</option>
+              <option value="to-do">To-Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            <p className="hidden md:block font-urbanist text-sm font-medium">
+              Task Category
+            </p>
           </>
         )}
       </div>

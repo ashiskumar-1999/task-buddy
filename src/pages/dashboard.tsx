@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { firebaseConfig } from '../config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
@@ -29,7 +29,8 @@ const Dashboard = () => {
   const router = useRouter();
   const db = getDatabase(firebaseConfig);
   const auth = getAuth(firebaseConfig);
-  const pathRef = ref(db, 'Tasks/');
+  //Since the pathRef is defined globally in this function It tried to create the pathRef on each render which cause an infinte loop. Using useMemo will restrict the rendering and only render when the pathRef value is changed.
+  const pathRef = useMemo(() => ref(db, 'Tasks/'), [db]);
 
   const statusCategories = [
     { title: 'To-Do', color: '#FAC3FF', key: 'to-do' },
@@ -93,7 +94,7 @@ const Dashboard = () => {
       };
       SaveDataToFireBase();
     }
-  }, [formDataTobeAdded]);
+  }, [formDataTobeAdded, pathRef]);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -114,11 +115,10 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
-  }, [formDataTobeAdded]);
+  }, [formDataTobeAdded, pathRef]);
 
   const handleTaskRemove = async (TaskId: string | []) => {
     const newPathRef = ref(db, 'Tasks/' + TaskId);
-    console.log('NewRef', newPathRef);
     await remove(newPathRef)
       .then(() => {
         console.log('Task removed successfully');
@@ -132,6 +132,8 @@ const Dashboard = () => {
       });
   };
 
+  const handleChangeStatus = async () => {};
+
   const filterTasksByStatus = (statusKey: string) => {
     return (
       tasks && tasks.filter((task: TaskProps) => task.status === statusKey)
@@ -144,7 +146,7 @@ const Dashboard = () => {
   return (
     <Tabs defaultValue="list">
       <div className="px-9 py-8">
-        <div className="flex flex-row justify-between items-start -mb-8">
+        <div className="flex flex-row justify-between items-start sm:-mb-8">
           <Logo />
           <ProfileSection url={url} name={name} handleSignOut={handleSignOut} />
         </div>
@@ -160,7 +162,7 @@ const Dashboard = () => {
           </TabsTrigger>
           <TabsTrigger
             value="board"
-            className="text-xl  font-medium border border-transparent rounded-none data-[state=active]:text-black data-[state=active]:border-b data-[state=active]:border-solid data-[state=active]:border-b-black data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+            className="text-xl font-medium border border-transparent rounded-none data-[state=active]:text-black data-[state=active]:border-b data-[state=active]:border-solid data-[state=active]:border-b-black data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
             <span className="inline-block p-1">
               <SquareKanban />
@@ -168,17 +170,19 @@ const Dashboard = () => {
             Board
           </TabsTrigger>
         </TabsList>
-        <div className="flex flex-row items-center justify-between pt-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4">
           <div>
-            <span>Filter By:</span>
+            <span className="font-urbanist font-semibold text-left">
+              Filter By:
+            </span>
           </div>
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <Input
               placeholder="Search"
               className="p-1.5 font-urbanist text-xs font-semibold rounded-full"
             />
             <Button
-              className="px-10 py-6 rounded-full bg-[#7B1984] hover:bg-[#7B1984] font-urbanist text-sm font-bold "
+              className="w-full sm:w-none md:px-10 py-6 rounded-full bg-[#7B1984] hover:bg-[#7B1984] font-urbanist text-sm font-bold "
               onClick={() => setIsOpen(true)}
             >
               Add Task
@@ -210,6 +214,7 @@ const Dashboard = () => {
                       dueDate={task.dueDate}
                       status={replaceCapitalLetter(task.status)}
                       handleDelete={handleTaskRemove}
+                      handleStatus={handleChangeStatus}
                     />
                   ))}
                 </TaskCard>
@@ -218,7 +223,7 @@ const Dashboard = () => {
           </div>
         </TabsContent>
         <TabsContent value="board">
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-col lg:flex-row justify-between">
             {statusCategories.map(({ title, color, key }) => {
               const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
               return (
