@@ -68,14 +68,14 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={onDialogClose}>
-      <DialogContent className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
+      <DialogContent className=" max-w-lg p-6 bg-white rounded-lg shadow-lg">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-semibold text-gray-800">
             Create Task
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={onInputSubmit}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Task Title Input */}
             <Label
               htmlFor="task-title"
@@ -107,7 +107,7 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
             <Label className="block text-sm font-medium text-gray-700">
               Task Category
             </Label>
-            <div className="flex items-center space-x-4 mt-1">
+            <div className="flex items-center space-x-4">
               <Button
                 id="category"
                 value="work"
@@ -128,45 +128,43 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
           </div>
 
           {/* Due Date and Status */}
-          <div className="flex gap-14 py-4">
-            <div>
-              <Label
-                htmlFor="due-date"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Due on*
-              </Label>
-              <Input
-                type="date"
-                id="dueDate"
-                className="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <Label
-                htmlFor="task-status"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Task Status*
-              </Label>
-              <select
-                id="status"
-                onChange={handleChange}
-                className="mt-1 w-28 h-9 border border-gray-300 rounded-md shadow-sm focus:ring-purple-100 focus:border-purple-100"
-                required
-              >
-                <option value="">Choose</option>
-                <option value="to-do">To-Do</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
+          <div className="py-2">
+            <Label
+              htmlFor="due-date"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Due on*
+            </Label>
+            <Input
+              type="date"
+              id="dueDate"
+              className="mt-1 w-40 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="py-2">
+            <Label
+              htmlFor="task-status"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Task Status*
+            </Label>
+            <select
+              id="status"
+              onChange={handleChange}
+              className="mt-1 w-28 h-9 border border-gray-300 rounded-md shadow-sm focus:ring-purple-100 focus:border-purple-100"
+              required
+            >
+              <option value="">Choose</option>
+              <option value="to-do">To-Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
           </div>
           <Label className="block text-sm font-medium text-gray-700">
             Attachment
           </Label>
-          <div className="h-14 mt-2 border border-dashed border-gray-300 rounded-md text-center text-sm text-gray-500">
+          <div className="h-14 mt-2 border border-dashed border-gray-300 rounded-md text-sm text-gray-500">
             <Input
               id="uploadFile"
               type="file"
@@ -175,8 +173,7 @@ const Createtask = ({ isDialogOpen, onDialogClose, onSubmit }: DialogProps) => {
             />
           </div>
 
-          {/* Footer Buttons */}
-          <DialogFooter className="mt-6 flex justify-end space-x-4">
+          <DialogFooter className="mt-6 flex flex-col-reverse gap-4">
             <DialogClose asChild>
               <Button
                 type="button"

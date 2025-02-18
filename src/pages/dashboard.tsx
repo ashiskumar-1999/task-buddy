@@ -145,7 +145,7 @@ const Dashboard = () => {
 
   return (
     <Tabs defaultValue="list">
-      <div className="px-9 py-8">
+      <div className="px-9 sm:py-8">
         <div className="flex flex-row justify-between items-start sm:-mb-8">
           <Logo />
           <ProfileSection url={url} name={name} handleSignOut={handleSignOut} />
@@ -179,7 +179,7 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <Input
               placeholder="Search"
-              className="p-1.5 font-urbanist text-xs font-semibold rounded-full"
+              className="p-6 font-urbanist text-md font-semibold rounded-full"
             />
             <Button
               className="w-full sm:w-none md:px-10 py-6 rounded-full bg-[#7B1984] hover:bg-[#7B1984] font-urbanist text-sm font-bold "
