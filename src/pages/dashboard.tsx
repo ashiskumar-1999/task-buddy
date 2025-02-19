@@ -145,8 +145,8 @@ const Dashboard = () => {
 
   return (
     <Tabs defaultValue="list">
-      <div className="px-9 sm:py-8">
-        <div className="flex flex-row justify-between items-start sm:-mb-8">
+      <div className="px-4 sm:px-9 sm:py-8">
+        <div className="flex flex-row justify-between items-start sm:-mb-8 -mx-4 sm:mx-1 bg-[#FAEEFC] sm:bg-transparent">
           <Logo />
           <ProfileSection url={url} name={name} handleSignOut={handleSignOut} />
         </div>

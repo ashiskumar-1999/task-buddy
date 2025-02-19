@@ -23,13 +23,13 @@ const ProfileSection = ({
             className="rounded-full inline-block mr-2"
           />
         )}
-        <p className="inline-block font-urbanist text-base font-semibold">
+        <p className="hidden sm:inline font-urbanist text-base font-semibold">
           {name}
         </p>
       </div>
       <Button
         variant="outline"
-        className="rounded-xl border-[#7B198426] hover:bg-none font-urbanist text-xs font-semibold"
+        className="hidden sm:block rounded-xl border-[#7B198426] hover:bg-none font-urbanist text-xs font-semibold"
         onClick={handleSignOut}
       >
         Log Out
