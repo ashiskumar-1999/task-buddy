@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [name, setName] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formDataTobeAdded, setFormDataTobeAdded] = useState<FormProps>();
+  const [searchFilter, setSearchFilter] = useState<string>();
   const router = useRouter();
   const db = getDatabase(firebaseConfig);
   const auth = getAuth(firebaseConfig);
@@ -132,12 +133,15 @@ const Dashboard = () => {
       });
   };
 
-  const handleChangeStatus = async () => {};
-
-  const filterTasksByStatus = (statusKey: string) => {
-    return (
-      tasks && tasks.filter((task: TaskProps) => task.status === statusKey)
-    );
+  const filterTasksByStatus = (statusKey: string, searchFilter?: string) => {
+    const FilteredTask =
+      tasks && tasks.filter((task: TaskProps) => task.status === statusKey);
+    if (searchFilter) {
+      return FilteredTask.filter((task: TaskProps) =>
+        task.title.toLowerCase().includes(searchFilter.toLowerCase())
+      );
+    }
+    return FilteredTask;
   };
   const replaceCapitalLetter = (string: string) => {
     return string.replace(/\b\w|-(\w)/g, (str) => str.toUpperCase());
@@ -180,6 +184,7 @@ const Dashboard = () => {
             <Input
               placeholder="Search"
               className="p-6 font-urbanist text-md font-semibold rounded-full"
+              onChange={(e) => setSearchFilter(e.target.value)}
             />
             <Button
               className="w-full sm:w-none md:px-10 py-6 rounded-full bg-[#7B1984] hover:bg-[#7B1984] font-urbanist text-sm font-bold "
@@ -197,7 +202,7 @@ const Dashboard = () => {
         <TabsContent value="list">
           <div className="flex flex-col justify-center">
             {statusCategories.map(({ title, color, key }) => {
-              const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
+              const filteredTasks = filterTasksByStatus(key, searchFilter); // Use function inside the loop
               return (
                 <TaskCard
                   key={key}
@@ -214,7 +219,6 @@ const Dashboard = () => {
                       dueDate={task.dueDate}
                       status={replaceCapitalLetter(task.status)}
                       handleDelete={handleTaskRemove}
-                      handleStatus={handleChangeStatus}
                     />
                   ))}
                 </TaskCard>
@@ -225,7 +229,7 @@ const Dashboard = () => {
         <TabsContent value="board">
           <div className="flex flex-col lg:flex-row justify-between">
             {statusCategories.map(({ title, color, key }) => {
-              const filteredTasks = filterTasksByStatus(key); // Use function inside the loop
+              const filteredTasks = filterTasksByStatus(key, searchFilter); // Use function inside the loop
               return (
                 <TaskCard
                   key={key}
