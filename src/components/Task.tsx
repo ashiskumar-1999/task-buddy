@@ -17,7 +17,7 @@ export interface CardProps {
   index?: number;
   isListView?: boolean;
   handleDelete?: (TaskId: string) => void;
-  handleStatus?: (value: string) => void;
+  handleStatus?: (value: string, taskId: string) => void;
   moveCard?: (dragIndex: number, hoverIndex: number) => void;
 }
 
@@ -126,7 +126,7 @@ const Task: FC<CardProps> = ({
               {dueDate}
             </p>
             <select
-              onChange={(e) => handleStatus && handleStatus(e.target.value)}
+              onChange={(e) => handleStatus && handleStatus(e.target.value, id)}
               className="w-24 hidden md:block font-urbanist text-sm font-medium bg-transparent"
             >
               <option value="">{status}</option>

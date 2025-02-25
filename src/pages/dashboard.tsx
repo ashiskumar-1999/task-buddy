@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { firebaseConfig } from '../config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
@@ -8,7 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import Createtask from '@/section/Createtask';
 import ProfileSection from '@/section/ProfileSection';
-import { push, set, get, ref, remove, getDatabase } from '@firebase/database';
+import {
+  push,
+  set,
+  get,
+  ref,
+  remove,
+  getDatabase,
+  update,
+} from '@firebase/database';
 import { FormProps, TaskProps } from '@/types';
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
@@ -68,6 +76,16 @@ const Dashboard = () => {
     console.log(formData);
     setFormDataTobeAdded(formData);
   };
+
+  const handleStatus = useCallback(
+    (value: string, TaskId: string) => {
+      const updatePathRef = ref(db, `Tasks/${TaskId}`);
+      update(updatePathRef, {
+        status: value,
+      });
+    },
+    [db]
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -219,6 +237,7 @@ const Dashboard = () => {
                       dueDate={task.dueDate}
                       status={replaceCapitalLetter(task.status)}
                       handleDelete={handleTaskRemove}
+                      handleStatus={handleStatus}
                     />
                   ))}
                 </TaskCard>
@@ -245,6 +264,7 @@ const Dashboard = () => {
                       dueDate={task.dueDate}
                       status={replaceCapitalLetter(task.status)}
                       handleDelete={handleTaskRemove}
+                      handleStatus={handleStatus}
                     />
                   ))}
                 </TaskCard>
