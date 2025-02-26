@@ -77,15 +77,13 @@ const Dashboard = () => {
     setFormDataTobeAdded(formData);
   };
 
-  const handleStatus = useCallback(
-    (value: string, TaskId: string) => {
-      const updatePathRef = ref(db, `Tasks/${TaskId}`);
-      update(updatePathRef, {
-        status: value,
-      });
-    },
-    [db]
-  );
+  const handleStatus = (value: string, TaskId: string) => {
+    const updatePathRef = ref(db, `Tasks/${TaskId}`);
+    update(updatePathRef, {
+      status: value,
+    });
+    window.dispatchEvent(new Event('taskUpdated'));
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -134,6 +132,11 @@ const Dashboard = () => {
       }
     };
     fetchTasks();
+    window.addEventListener('taskUpdated', fetchTasks);
+
+    return () => {
+      window.removeEventListener('taskUpdated', fetchTasks);
+    };
   }, [formDataTobeAdded, pathRef]);
 
   const handleTaskRemove = async (TaskId: string | []) => {
