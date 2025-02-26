@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { firebaseConfig } from '../config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
