@@ -1,13 +1,20 @@
-import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import '@/styles/globals.css';
+import { Providers } from './providers';
 
-export default function Document(children: React.ReactNode) {
+export const metadata = {
+  title: 'Task-Buddy',
+  description: 'Manage your tasks efficiently with TaskBuddy.',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <head />
       <body className="antialiased">
-        <DndProvider backend={HTML5Backend}>{children}</DndProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
