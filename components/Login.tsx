@@ -1,8 +1,9 @@
+'use client';
 import React from 'react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 
-const LogIn = ({ handleLogin }: { handleLogin: () => void }) => {
+const LogIn = ({ handleLogin }: { handleLogin?: () => void }) => {
   return (
     <div className="flex sm:flex-row h-screen justify-center sm:justify-between items-center sm:pl-20">
       <div className="space-y-7">

@@ -1,5 +1,6 @@
+'use client';
 import React, { useEffect, useMemo, useState } from 'react';
-import { firebaseConfig } from '../config/firebase';
+import { firebaseConfig } from '@/config/firebase';
 import TaskCard from '@/components/TaskCard';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ import {
 } from '@firebase/database';
 import { FormProps, TaskProps } from '@/types';
 import { getAuth, signOut } from 'firebase/auth';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { SquareKanban, Rows3 } from 'lucide-react';
 import { TabsContent } from '@radix-ui/react-tabs';
 
