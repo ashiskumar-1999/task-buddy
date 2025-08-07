@@ -20,7 +20,7 @@ import {
 } from '@firebase/database';
 import { FormProps, TaskProps } from '@/types';
 import { getAuth, signOut } from 'firebase/auth';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { SquareKanban, Rows3 } from 'lucide-react';
 import { TabsContent } from '@radix-ui/react-tabs';
 
