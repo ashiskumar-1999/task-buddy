@@ -5,5 +5,4 @@ import { config } from 'dotenv';
 config({ path: '.env' }); // or .env.local
 
 const client = neon(process.env.DATABASE_URL!);
-console.log('Database URL:', process.env.DATABASE_URL);
 export const db = drizzle({ client: client });
