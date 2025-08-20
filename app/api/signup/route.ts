@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     await db.insert(authTable).values({
       user_id: newUser[0].id,
       password: hashedPassword,
-      refresh_token: refreshToken, // we’ll handle refresh token later
+      refresh_token: '', // we’ll handle refresh token later
       refresh_token_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     });
 

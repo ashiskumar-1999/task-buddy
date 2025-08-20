@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user
-    const user = await db
+    const [user] = await db
       .select()
       .from(userTable)
       .where(eq(userTable.email, email));
-    if (user.length === 0) {
+    if (!user) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const auth = await db
       .select()
       .from(authTable)
-      .where(eq(authTable.user_id, user[0].id));
+      .where(eq(authTable.user_id, user.id));
     if (auth.length === 0) {
       return NextResponse.json(
         { error: 'No auth record found' },
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const token = generateToken({ userId: user[0].id, email: user[0].email });
+    const token = generateToken({ userId: user.id, email: user.email });
     const refresh_token = crypto.randomUUID(); // Generate a random refresh token
     await db
       .update(authTable)
@@ -60,12 +60,20 @@ export async function POST(request: NextRequest) {
           Date.now() + 7 * 24 * 60 * 60 * 1000
         ), // 7 days
       })
-      .where(eq(authTable.user_id, user[0].id));
-    return NextResponse.json({
+      .where(eq(authTable.user_id, user.id));
+    const response = NextResponse.json({
       message: 'Signin successful',
       token,
-      user: user[0],
+      user: user,
     });
+    response.cookies.set('refresh_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 15 * 60, // 15 minutes
+    });
+    return response;
   } catch (error) {
     console.error('Auth error:', error);
     return NextResponse.json(
